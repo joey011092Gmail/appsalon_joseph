@@ -1,0 +1,108 @@
+---
+title: Diagrama de Clases - MathQuest
+---
+classDiagram
+direction LR
+
+class Question {
+  +enum Operator {ADD, SUB, MUL, DIV}
+  -int left
+  -int right
+  -int answer
+  -Operator operator
+  +Question(int left, int right, Operator operator)
+  +boolean isCorrect(int c)
+  +int getLeft()
+  +int getRight()
+  +Operator getOperator()
+  +int getAnswer()
+}
+
+class Level {
+  -String name
+  -int maxOp
+  -int questions
+  -int points
+  -int penalty
+  +Level(String name,int maxOp,int questions,int points,int penalty)
+  +String getName()
+  +int getMaxOperand()
+  +int getNumberOfQuestions()
+  +int getPointsPerQuestion()
+  +int getPenaltyPerWrong()
+}
+
+class MathEngine {
+  -java.util.Random rng
+  -int max
+  +MathEngine(int max)
+  +MathEngine(int max, java.util.Random r)
+  +Question generateQuestion()
+}
+
+class ScoreManager {
+  -int score
+  -int correct
+  -int wrong
+  +void registerCorrect(int p)
+  +void registerIncorrect(int p)
+  +int getScore()
+  +int getCorrectCount()
+  +int getIncorrectCount()
+}
+
+class PlayerProgress {
+  -int index
+  -int lives
+  -int timeouts
+  +PlayerProgress(int lives)
+  +int getCurrentLevelIndex()
+  +void advanceLevel()
+  +int getLives()
+  +void loseLife()
+  +int getTimeouts()
+  +void addTimeout()
+}
+
+class GameController {
+  -Level[] levels
+  -ScoreManager score
+  -PlayerProgress progress
+  -MathEngine engine
+  -Question current
+  -int levelIndex
+  +GameController()
+  +void setLevelIndex(int idx)
+  +String[] getLevelNames()
+  +void nextQuestion()
+  +String getQuestionText()
+  +boolean checkAnswer(String text)
+  +int getLives()
+  +int getScore()
+}
+
+class GameFrame {
+  -javax.swing.JComboBox<String> levelSelect
+  -javax.swing.JLabel livesLabel
+  -javax.swing.JLabel scoreLabel
+  -javax.swing.JLabel questionLabel
+  -javax.swing.JTextField answerField
+  -javax.swing.JButton checkButton
+  -javax.swing.JButton nextButton
+  -javax.swing.JLabel feedbackLabel
+  -GameController controller
+  +GameFrame()
+}
+
+class MathQuestApp {
+  +static void main(String[] args)
+}
+
+MathEngine ..> Question : genera
+GameController --> MathEngine
+GameController --> ScoreManager
+GameController --> PlayerProgress
+GameController o--> Level : levels[ ]
+GameController --> Question : current
+GameFrame --> GameController
+MathQuestApp --> GameFrame
